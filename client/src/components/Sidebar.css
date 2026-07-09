@@ -1,0 +1,7 @@
+.sidebar-link {
+  transition: all 0.25s ease;
+}
+
+.sidebar-link:hover {
+  transform: translateX(5px);
+}
