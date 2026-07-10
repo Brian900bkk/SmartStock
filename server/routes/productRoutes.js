@@ -4,18 +4,23 @@ const router = express.Router();
 const {
   getProducts,
   addProduct,
-} = require("../controllers/productController");
-const {
-  getProducts,
-  addProduct,
   deleteProduct,
 } = require("../controllers/productController");
-router.delete("/:id", deleteProduct);
+
+// Get all products
 router.get("/", getProducts);
 
-router.post("/", (req, res, next) => {
-  console.log("Calling addProduct...");
-  next();
-}, addProduct);
+// Add a product
+router.post(
+  "/",
+  (req, res, next) => {
+    console.log("Calling addProduct...");
+    next();
+  },
+  addProduct
+);
+
+// Delete a product
+router.delete("/:id", deleteProduct);
 
 module.exports = router;
