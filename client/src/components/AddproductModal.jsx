@@ -1,7 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from "../services/api";
 
-function AddProductModal({ isOpen, onClose, onProductAdded }) {
+function AddProductModal({
+  isOpen,
+  onClose,
+  onProductAdded,
+  product,
+}) {
   const [formData, setFormData] = useState({
     product_name: "",
     category: "",
@@ -11,23 +16,17 @@ function AddProductModal({ isOpen, onClose, onProductAdded }) {
     supplier: "",
   });
 
-  if (!isOpen) return null;
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      await api.post("/products", formData);
-
-      alert("Product added successfully!");
-
+  useEffect(() => {
+    if (product) {
+      setFormData({
+        product_name: product.product_name,
+        category: product.category,
+        buying_price: product.buying_price,
+        selling_price: product.selling_price,
+        quantity: product.quantity,
+        supplier: product.supplier,
+      });
+    } else {
       setFormData({
         product_name: "",
         category: "",
@@ -36,12 +35,35 @@ function AddProductModal({ isOpen, onClose, onProductAdded }) {
         quantity: "",
         supplier: "",
       });
+    }
+  }, [product]);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  if (!isOpen) return null;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (product) {
+        await api.put(`/products/${product.id}`, formData);
+        alert("Product updated successfully!");
+      } else {
+        await api.post("/products", formData);
+        alert("Product added successfully!");
+      }
 
       onProductAdded();
       onClose();
     } catch (error) {
       console.error(error);
-      alert("Failed to add product.");
+      alert("Operation failed.");
     }
   };
 
@@ -49,7 +71,7 @@ function AddProductModal({ isOpen, onClose, onProductAdded }) {
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6">
         <h2 className="text-2xl font-bold mb-6">
-          Add Product
+          {product ? "Edit Product" : "Add Product"}
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -110,7 +132,6 @@ function AddProductModal({ isOpen, onClose, onProductAdded }) {
           />
 
           <div className="flex justify-end gap-3 pt-4">
-
             <button
               type="button"
               onClick={onClose}
@@ -123,9 +144,8 @@ function AddProductModal({ isOpen, onClose, onProductAdded }) {
               type="submit"
               className="bg-sky-600 text-white px-5 py-2 rounded-lg hover:bg-sky-700"
             >
-              Save Product
+              {product ? "Update Product" : "Save Product"}
             </button>
-
           </div>
 
         </form>

@@ -3,10 +3,11 @@ const cors = require("cors");
 require("dotenv").config();
 require("./config/db");
 
-const authRoutes = require("./routes/authRoutes");
-const productRoutes = require("./routes/productRoutes");
-const dashboardRoutes = require("./routes/dashboardRoutes");
-
+app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/sales", salesRoutes);
+app.use("/api/reports", reportRoutes);
 const app = express();
 
 app.use(cors());
@@ -18,6 +19,14 @@ console.log("Registering product routes...");
 app.use("/api/products", productRoutes);
 console.log("Product routes imported successfully");
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/sales", salesRoutes);
+const reportRoutes = require("./routes/reportRoutes");
+app.post("/api/sales/test", (req, res) => {
+  res.json({
+    success: true,
+    message: "POST test works"
+  });
+});
 
 app.get("/", (req, res) => {
     res.send("Welcome to SmartStock API");

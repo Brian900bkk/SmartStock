@@ -77,9 +77,63 @@ const deleteProduct = (req, res) => {
     });
   });
 };
+// Update product
+const updateProduct = (req, res) => {
+  const { id } = req.params;
+
+  const {
+    product_name,
+    category,
+    buying_price,
+    selling_price,
+    quantity,
+    supplier,
+  } = req.body;
+
+  const sql = `
+    UPDATE products
+    SET
+      product_name = ?,
+      category = ?,
+      buying_price = ?,
+      selling_price = ?,
+      quantity = ?,
+      supplier = ?
+    WHERE id = ?
+  `;
+
+  db.query(
+    sql,
+    [
+      product_name,
+      category,
+      buying_price,
+      selling_price,
+      quantity,
+      supplier,
+      id,
+    ],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: err.message });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
+          message: "Product not found",
+        });
+      }
+
+      res.json({
+        message: "Product updated successfully",
+      });
+    }
+  );
+};
 
 module.exports = {
   getProducts,
   addProduct,
+  updateProduct,
   deleteProduct,
 };
