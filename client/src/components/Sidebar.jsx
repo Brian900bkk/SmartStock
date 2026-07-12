@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   Package,
   ShoppingCart,
+  ShoppingBag,
   Users,
   Truck,
   BarChart3,
@@ -15,19 +16,57 @@ function Sidebar() {
   const location = useLocation();
 
   const menuItems = [
-    { name: "Dashboard", path: "/dashboard", icon: <LayoutDashboard size={20} /> },
-    { name: "Products", path: "/products", icon: <Package size={20} /> },
-    { name: "Sales", path: "/sales", icon: <ShoppingCart size={20} /> },
-    { name: "Customers", path: "/customers", icon: <Users size={20} /> },
-    { name: "Suppliers", path: "/suppliers", icon: <Truck size={20} /> },
-    { name: "Reports", path: "/reports", icon: <BarChart3 size={20} /> },
-    { name: "AI Assistant", path: "/ai", icon: <Bot size={20} /> },
-    { name: "Settings", path: "/settings", icon: <Settings size={20} /> },
+    {
+      name: "Dashboard",
+      path: "/dashboard",
+      icon: <LayoutDashboard size={20} />,
+    },
+    {
+      name: "Products",
+      path: "/products",
+      icon: <Package size={20} />,
+    },
+    {
+      name: "Sales",
+      path: "/sales",
+      icon: <ShoppingCart size={20} />,
+    },
+    {
+      name: "Purchases",
+      path: "/purchases",
+      icon: <ShoppingBag size={20} />,
+    },
+    {
+      name: "Customers",
+      path: "/customers",
+      icon: <Users size={20} />,
+    },
+    {
+      name: "Suppliers",
+      path: "/suppliers",
+      icon: <Truck size={20} />,
+    },
+    {
+      name: "Reports",
+      path: "/reports",
+      icon: <BarChart3 size={20} />,
+    },
+    {
+      name: "AI Assistant",
+      path: "/ai",
+      icon: <Bot size={20} />,
+    },
+    {
+      name: "Settings",
+      path: "/settings",
+      icon: <Settings size={20} />,
+    },
   ];
 
   return (
     <div className="fixed left-0 top-0 h-screen w-64 bg-sky-700 text-white shadow-xl">
 
+      {/* Logo */}
       <div className="py-6 text-center border-b border-sky-600">
         <h1 className="text-3xl font-bold">SmartStock</h1>
         <p className="text-sm text-sky-100 mt-1">
@@ -35,6 +74,7 @@ function Sidebar() {
         </p>
       </div>
 
+      {/* Navigation */}
       <nav className="mt-6">
         {menuItems.map((item) => (
           <Link
@@ -52,6 +92,7 @@ function Sidebar() {
         ))}
       </nav>
 
+      {/* Logout */}
       <div className="absolute bottom-0 w-full p-4">
         <Link
           to="/"
@@ -60,14 +101,6 @@ function Sidebar() {
           <LogOut size={20} />
           Logout
         </Link>
-        <li>
-  <Link
-    to="/reports"
-    className="block px-4 py-2 rounded-lg hover:bg-sky-700"
-  >
-    📊 Reports
-  </Link>
-</li>
       </div>
     </div>
   );

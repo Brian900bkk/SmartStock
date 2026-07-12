@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "../../services/api";
 import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
@@ -19,8 +21,11 @@ function Reports() {
 
   useEffect(() => {
     fetchReport();
-    fetchSales();
   }, []);
+
+  useEffect(() => {
+    fetchSales();
+  }, [filter, startDate, endDate]);
 
   const fetchReport = async () => {
     try {
@@ -30,6 +35,7 @@ function Reports() {
       console.error(err);
     }
   };
+
   const fetchSales = async () => {
     try {
       const res = await api.get("/reports/sales", {
@@ -39,12 +45,13 @@ function Reports() {
           endDate,
         },
       });
-  
+
       setSales(res.data);
     } catch (err) {
       console.error(err);
     }
   };
+
   const exportExcel = () => {
     const data = sales.map((sale) => ({
       ID: sale.id,
@@ -57,7 +64,6 @@ function Reports() {
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(data);
-
     const workbook = XLSX.utils.book_new();
 
     XLSX.utils.book_append_sheet(
@@ -66,7 +72,39 @@ function Reports() {
       "Sales Report"
     );
 
-    XLSX.writeFile(workbook, "SmartStock_Sales_Report.xlsx");
+    XLSX.writeFile(
+      workbook,
+      "SmartStock_Sales_Report.xlsx"
+    );
+  };
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("SmartStock Sales Report", 14, 20);
+
+    autoTable(doc, {
+      startY: 30,
+      head: [[
+        "Product",
+        "Customer",
+        "Quantity",
+        "Price",
+        "Total",
+        "Date",
+      ]],
+      body: sales.map((sale) => [
+        sale.product_name,
+        sale.customer_name,
+        sale.quantity,
+        `KSh ${sale.selling_price}`,
+        `KSh ${sale.total_amount}`,
+        new Date(sale.sale_date).toLocaleDateString(),
+      ]),
+    });
+
+    doc.save("SmartStock_Sales_Report.pdf");
   };
 
   return (
@@ -82,8 +120,9 @@ function Reports() {
             Reports
           </h1>
 
-          {/* Filter Section */}
+          {/* Filters */}
           <div className="bg-white rounded-xl shadow-md p-6 mb-8">
+
             <div className="flex flex-wrap gap-4 items-center">
 
               <select
@@ -116,6 +155,7 @@ function Reports() {
               )}
 
               <button
+                onClick={exportToPDF}
                 className="bg-red-600 text-white px-5 py-3 rounded-lg hover:bg-red-700"
               >
                 Export PDF
@@ -136,6 +176,7 @@ function Reports() {
               </button>
 
             </div>
+
           </div>
 
           {/* Summary Cards */}
@@ -184,8 +225,8 @@ function Reports() {
                   <th className="p-4">ID</th>
                   <th className="p-4">Product</th>
                   <th className="p-4">Customer</th>
-                  <th className="p-4">Qty</th>
-                  <th className="p-4">Price</th>
+                  <th className="p-4">Quantity</th>
+                  <th className="p-4">Selling Price</th>
                   <th className="p-4">Total</th>
                   <th className="p-4">Date</th>
                 </tr>

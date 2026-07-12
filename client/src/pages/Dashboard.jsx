@@ -14,6 +14,8 @@ function Dashboard() {
   const [stats, setStats] = useState({
     totalProducts: 0,
     totalStock: 0,
+    totalSales: 0,
+    totalCustomers: 0,
   });
 
   useEffect(() => {
@@ -23,7 +25,15 @@ function Dashboard() {
   const fetchDashboard = async () => {
     try {
       const res = await api.get("/dashboard");
-      setStats(res.data);
+
+      if (res.data.success) {
+        setStats({
+          totalProducts: res.data.totalProducts,
+          totalStock: res.data.totalStock,
+          totalSales: res.data.totalSales,
+          totalCustomers: res.data.totalCustomers,
+        });
+      }
     } catch (error) {
       console.error("Dashboard Error:", error);
     }
@@ -44,6 +54,7 @@ function Dashboard() {
 
           {/* Statistics Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mt-8">
+
             <StatCard
               title="Total Products"
               value={stats.totalProducts}
@@ -53,15 +64,15 @@ function Dashboard() {
 
             <StatCard
               title="Total Sales"
-              value="KSh 125,000"
-              change="+8% this month"
+              value={`KSh ${Number(stats.totalSales).toLocaleString()}`}
+              change="Revenue Generated"
               type="sales"
             />
 
             <StatCard
               title="Customers"
-              value="85"
-              change="+12 New"
+              value={stats.totalCustomers}
+              change="Registered Customers"
               type="customers"
             />
 
@@ -71,10 +82,12 @@ function Dashboard() {
               change="Current Inventory"
               type="lowstock"
             />
+
           </div>
 
           {/* Sales Chart + Recent Sales */}
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mt-10">
+
             <div className="xl:col-span-2">
               <SalesChart />
             </div>
@@ -82,13 +95,18 @@ function Dashboard() {
             <div className="xl:col-span-1">
               <RecentSales />
             </div>
+
           </div>
 
           {/* Lower Dashboard */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-8">
+
             <LowStock />
+
             <TopProducts />
+
           </div>
+
         </div>
       </div>
     </div>
