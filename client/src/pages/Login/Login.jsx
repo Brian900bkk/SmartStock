@@ -20,7 +20,7 @@ function Login() {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      alert("Login Successful");
+      alert("Login successful!");
 
       navigate("/dashboard");
     } catch (err) {
@@ -50,7 +50,9 @@ function Login() {
           required
         />
 
-        <button type="submit">Login</button>
+        <button type="submit">
+          Login
+        </button>
       </form>
     </div>
   );

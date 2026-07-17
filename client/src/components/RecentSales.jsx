@@ -1,33 +1,6 @@
 function RecentSales() {
     const sales = [
-      {
-        id: 1,
-        product: "Laptop",
-        customer: "John",
-        amount: "KSh 45,000",
-        status: "Completed",
-      },
-      {
-        id: 2,
-        product: "Printer",
-        customer: "Mary",
-        amount: "KSh 18,000",
-        status: "Completed",
-      },
-      {
-        id: 3,
-        product: "Mouse",
-        customer: "Kevin",
-        amount: "KSh 1,500",
-        status: "Pending",
-      },
-      {
-        id: 4,
-        product: "Keyboard",
-        customer: "Alice",
-        amount: "KSh 3,000",
-        status: "Completed",
-      },
+    
     ];
   
     return (

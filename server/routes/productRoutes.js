@@ -7,25 +7,20 @@ const {
   updateProduct,
   deleteProduct,
 } = require("../controllers/ProductController");
-// Get all products
-router.get("/", getProducts);
 
-router.post("/", addProduct);
+const verifyToken = require("../middleware/authMiddleware");
+const adminOnly = require("../middleware/adminMiddleware");
 
-router.put("/:id", updateProduct);
+// Anyone who is logged in can view products
+router.get("/", verifyToken, getProducts);
 
-router.delete("/:id", deleteProduct);
-// Add a product
-router.post(
-  "/",
-  (req, res, next) => {
-    console.log("Calling addProduct...");
-    next();
-  },
-  addProduct
-);
+// Only admins can add products
+router.post("/", verifyToken, adminOnly, addProduct);
 
-// Delete a product
-router.delete("/:id", deleteProduct);
+// Only admins can update products
+router.put("/:id", verifyToken, adminOnly, updateProduct);
+
+// Only admins can delete products
+router.delete("/:id", verifyToken, adminOnly, deleteProduct);
 
 module.exports = router;

@@ -8,6 +8,8 @@ import Reports from "./pages/Reports/Reports";
 import Customers from "./pages/Customers/Customers";
 import Suppliers from "./pages/Suppliers/Suppliers";
 import Purchases from "./pages/Purchases/Purchases";
+import Users from "./pages/Users/Users";
+import AI from "./pages/AI/AI";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path="/customers" element={<Customers />} />
         <Route path="/suppliers" element={<Suppliers />} />
         <Route path="/purchases" element={<Purchases />} />
+        <Route path="/users" element={<Users />} />
+        <Route path="/ai" element={<AI />} />
       </Routes>
     </BrowserRouter>
   );

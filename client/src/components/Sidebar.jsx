@@ -5,6 +5,7 @@ import {
   ShoppingCart,
   ShoppingBag,
   Users,
+  UserCog,
   Truck,
   BarChart3,
   Bot,
@@ -14,6 +15,10 @@ import {
 
 function Sidebar() {
   const location = useLocation();
+
+  // Get logged-in user
+  const user = JSON.parse(localStorage.getItem("user"));
+  const isAdmin = user?.role === "admin";
 
   const menuItems = [
     {
@@ -51,6 +56,18 @@ function Sidebar() {
       path: "/reports",
       icon: <BarChart3 size={20} />,
     },
+
+    // Only visible to admins
+    ...(isAdmin
+      ? [
+          {
+            name: "Users",
+            path: "/users",
+            icon: <UserCog size={20} />,
+          },
+        ]
+      : []),
+
     {
       name: "AI Assistant",
       path: "/ai",
@@ -63,9 +80,13 @@ function Sidebar() {
     },
   ];
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+  };
+
   return (
     <div className="fixed left-0 top-0 h-screen w-64 bg-sky-700 text-white shadow-xl">
-
       {/* Logo */}
       <div className="py-6 text-center border-b border-sky-600">
         <h1 className="text-3xl font-bold">SmartStock</h1>
@@ -96,6 +117,7 @@ function Sidebar() {
       <div className="absolute bottom-0 w-full p-4">
         <Link
           to="/"
+          onClick={handleLogout}
           className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 py-3 rounded-lg transition"
         >
           <LogOut size={20} />

@@ -12,6 +12,10 @@ function Products() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
+  // Get logged-in user
+  const user = JSON.parse(localStorage.getItem("user"));
+  const isAdmin = user?.role === "admin";
+
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -62,9 +66,7 @@ function Products() {
 
         <div className="p-8">
 
-          {/* Header */}
           <div className="flex justify-between items-center mb-6">
-
             <h1 className="text-3xl font-bold">Products</h1>
 
             <div className="flex gap-4">
@@ -77,21 +79,21 @@ function Products() {
                 className="w-80 border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-sky-500"
               />
 
-              <button
-                onClick={() => {
-                  setSelectedProduct(null);
-                  setIsModalOpen(true);
-                }}
-                className="bg-sky-600 text-white px-5 py-3 rounded-lg hover:bg-sky-700"
-              >
-                + Add Product
-              </button>
+              {isAdmin && (
+                <button
+                  onClick={() => {
+                    setSelectedProduct(null);
+                    setIsModalOpen(true);
+                  }}
+                  className="bg-sky-600 text-white px-5 py-3 rounded-lg hover:bg-sky-700"
+                >
+                  + Add Product
+                </button>
+              )}
 
             </div>
-
           </div>
 
-          {/* Products Table */}
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
 
             <table className="w-full">
@@ -105,16 +107,17 @@ function Products() {
                   <th className="p-4 text-left">Selling Price</th>
                   <th className="p-4 text-left">Quantity</th>
                   <th className="p-4 text-left">Supplier</th>
-                  <th className="p-4 text-center">Actions</th>
+
+                  {isAdmin && (
+                    <th className="p-4 text-center">Actions</th>
+                  )}
                 </tr>
               </thead>
 
               <tbody>
 
                 {filteredProducts.length > 0 ? (
-
                   filteredProducts.map((product) => (
-
                     <tr
                       key={product.id}
                       className="border-b hover:bg-gray-50"
@@ -131,44 +134,42 @@ function Products() {
                       <td className="p-4">{product.quantity}</td>
                       <td className="p-4">{product.supplier}</td>
 
-                      <td className="p-4">
-                        <div className="flex justify-center gap-2">
+                      {isAdmin && (
+                        <td className="p-4">
+                          <div className="flex justify-center gap-2">
 
-                          <button
-                            onClick={() => {
-                              setSelectedProduct(product);
-                              setIsModalOpen(true);
-                            }}
-                            className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-lg"
-                          >
-                            Edit
-                          </button>
+                            <button
+                              onClick={() => {
+                                setSelectedProduct(product);
+                                setIsModalOpen(true);
+                              }}
+                              className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-lg"
+                            >
+                              Edit
+                            </button>
 
-                          <button
-                            onClick={() => handleDelete(product.id)}
-                            className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg"
-                          >
-                            Delete
-                          </button>
+                            <button
+                              onClick={() => handleDelete(product.id)}
+                              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg"
+                            >
+                              Delete
+                            </button>
 
-                        </div>
-                      </td>
+                          </div>
+                        </td>
+                      )}
 
                     </tr>
-
                   ))
-
                 ) : (
-
                   <tr>
                     <td
-                      colSpan="8"
+                      colSpan={isAdmin ? 8 : 7}
                       className="text-center p-6 text-gray-500"
                     >
                       No products found.
                     </td>
                   </tr>
-
                 )}
 
               </tbody>
@@ -180,15 +181,17 @@ function Products() {
         </div>
       </div>
 
-      <AddProductModal
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setSelectedProduct(null);
-        }}
-        onProductAdded={fetchProducts}
-        product={selectedProduct}
-      />
+      {isAdmin && (
+        <AddProductModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedProduct(null);
+          }}
+          onProductAdded={fetchProducts}
+          product={selectedProduct}
+        />
+      )}
 
     </div>
   );
