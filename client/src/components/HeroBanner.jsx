@@ -15,17 +15,16 @@ function HeroBanner() {
 
   return (
     <div className="relative h-60 rounded-3xl overflow-hidden shadow-xl">
-      {/* Background Image */}
       <img
         src={businessBg}
         alt="Business"
         className="absolute inset-0 w-full h-full object-cover"
       />
 
-      {/* Dark Overlay */}
+      
       <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 to-slate-900/50"></div>
 
-      {/* Content */}
+  
       <div className="relative z-10 h-full flex items-center px-10">
         <div className="text-white">
           <h1 className="text-4xl font-bold">

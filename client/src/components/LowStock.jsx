@@ -1,11 +1,6 @@
 import { FaExclamationTriangle } from "react-icons/fa";
 
-const products = [
-  { name: "HP Printer", qty: 2 },
-  { name: "Dell Mouse", qty: 3 },
-  { name: "A4 Printing Paper", qty: 5 },
-  { name: "Keyboard", qty: 1 },
-];
+const products = [];
 
 function LowStock() {
   return (

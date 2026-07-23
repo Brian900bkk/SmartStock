@@ -1,12 +1,6 @@
 import { FaStar } from "react-icons/fa";
 
-const products = [
-  "HP Laptop",
-  "Canon Printer",
-  "Dell Mouse",
-  "Keyboard",
-  "Office Chair",
-];
+const products = [];
 
 function TopProducts() {
   return (

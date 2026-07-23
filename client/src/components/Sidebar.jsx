@@ -15,8 +15,6 @@ import {
 
 function Sidebar() {
   const location = useLocation();
-
-  // Get logged-in user
   const user = JSON.parse(localStorage.getItem("user"));
   const isAdmin = user?.role === "admin";
 
@@ -56,8 +54,6 @@ function Sidebar() {
       path: "/reports",
       icon: <BarChart3 size={20} />,
     },
-
-    // Only visible to admins
     ...(isAdmin
       ? [
           {
@@ -87,15 +83,12 @@ function Sidebar() {
 
   return (
     <div className="fixed left-0 top-0 h-screen w-64 bg-sky-700 text-white shadow-xl">
-      {/* Logo */}
       <div className="py-6 text-center border-b border-sky-600">
         <h1 className="text-3xl font-bold">SmartStock</h1>
         <p className="text-sm text-sky-100 mt-1">
           Inventory Management
         </p>
       </div>
-
-      {/* Navigation */}
       <nav className="mt-6">
         {menuItems.map((item) => (
           <Link
@@ -112,8 +105,6 @@ function Sidebar() {
           </Link>
         ))}
       </nav>
-
-      {/* Logout */}
       <div className="absolute bottom-0 w-full p-4">
         <Link
           to="/"

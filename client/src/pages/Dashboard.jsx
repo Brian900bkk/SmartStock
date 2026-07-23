@@ -41,18 +41,13 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen bg-slate-100">
-      {/* Sidebar */}
       <Sidebar />
-
-      {/* Main Content */}
       <div className="ml-60 bg-gray-100 min-h-screen">
         <Navbar />
 
         <div className="p-8">
-          {/* Hero Banner */}
           <HeroBanner />
 
-          {/* Statistics Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mt-8">
 
             <StatCard
@@ -85,7 +80,6 @@ function Dashboard() {
 
           </div>
 
-          {/* Sales Chart + Recent Sales */}
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mt-10">
 
             <div className="xl:col-span-2">
@@ -98,7 +92,7 @@ function Dashboard() {
 
           </div>
 
-          {/* Lower Dashboard */}
+       
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-8">
 
             <LowStock />
