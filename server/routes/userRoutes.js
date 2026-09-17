@@ -1,20 +1,19 @@
 const express = require("express");
+
 const router = express.Router();
 
 const {
-  getUsers,
-  addUser,
-  updateUser,
-  deleteUser,
-} = require("../controllers/userController");
+    register,
+    verifyEmail,
+    login
+} = require("../controllers/authController");
 
-const verifyToken = require("../middleware/authMiddleware");
-const adminOnly = require("../middleware/adminMiddleware");
 
-// All routes require login and admin role
-router.get("/", verifyToken, adminOnly, getUsers);
-router.post("/", verifyToken, adminOnly, addUser);
-router.put("/:id", verifyToken, adminOnly, updateUser);
-router.delete("/:id", verifyToken, adminOnly, deleteUser);
+router.post("/register", register);
+
+router.post("/verify-email", verifyEmail);
+
+router.post("/login", login);
+
 
 module.exports = router;

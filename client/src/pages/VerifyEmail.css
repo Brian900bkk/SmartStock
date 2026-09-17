@@ -1,0 +1,113 @@
+.verify-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #111827, #374151);
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .verify-card {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    box-sizing: border-box;
+  }
+  
+  .verify-logo {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 15px;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    background: #ef4444;
+    color: white;
+  
+    border-radius: 12px;
+  
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .verify-card h1 {
+    margin: 0 0 10px;
+    color: #111827;
+  }
+  
+  .verify-card p {
+    color: #6b7280;
+    line-height: 1.5;
+  }
+  
+  .verify-card strong {
+    display: block;
+    margin-bottom: 25px;
+    color: #111827;
+    word-break: break-word;
+  }
+  
+  .verify-card input {
+    width: 100%;
+    height: 50px;
+    box-sizing: border-box;
+  
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+  
+    padding: 0 15px;
+  
+    text-align: center;
+    letter-spacing: 8px;
+  
+    font-size: 20px;
+    outline: none;
+  
+    margin-bottom: 15px;
+  }
+  
+  .verify-card input:focus {
+    border-color: #2563eb;
+  }
+  
+  .verify-card button {
+    width: 100%;
+    height: 50px;
+  
+    border: none;
+    border-radius: 8px;
+  
+    background: #2563eb;
+    color: white;
+  
+    font-size: 16px;
+    font-weight: 600;
+  
+    cursor: pointer;
+  }
+  
+  .verify-card button:hover {
+    background: #1d4ed8;
+  }
+  
+  .verify-card button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+  }
+  
+  .verify-footer {
+    margin-top: 20px;
+  }
+  
+  .verify-footer a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+  }

@@ -10,7 +10,8 @@ import Suppliers from "./pages/Suppliers/Suppliers";
 import Purchases from "./pages/Purchases/Purchases";
 import Users from "./pages/Users/Users";
 import AI from "./pages/AI/AI";
-
+import Register from "./pages/Register";
+import VerifyEmail from "./pages/VerifyEmail";
 function App() {
   return (
     <BrowserRouter>
@@ -25,6 +26,8 @@ function App() {
         <Route path="/purchases" element={<Purchases />} />
         <Route path="/users" element={<Users />} />
         <Route path="/ai" element={<AI />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
       </Routes>
     </BrowserRouter>
   );
