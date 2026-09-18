@@ -27,6 +27,7 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
 
+    // Check required fields
     if (
       !formData.full_name ||
       !formData.email ||
@@ -39,11 +40,13 @@ function Register() {
       return;
     }
 
+    // Check password length
     if (formData.password.length < 6) {
       alert("Password must be at least 6 characters.");
       return;
     }
 
+    // Check password confirmation
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match.");
       return;
@@ -60,6 +63,7 @@ function Register() {
         role: formData.role,
       });
 
+      // Registration successful
       alert(res.data.message);
 
       navigate("/verify-email", {
@@ -70,10 +74,13 @@ function Register() {
     } catch (error) {
       console.error("Registration Error:", error);
 
-      alert(
+      // Get the actual error message
+      const message =
         error.response?.data?.message ||
-          "Registration failed. Please try again."
-      );
+        error.message ||
+        "Registration failed. Please try again.";
+
+      alert(`Registration Error: ${message}`);
     } finally {
       setLoading(false);
     }
@@ -152,11 +159,12 @@ function Register() {
           required
         />
 
-        {/* Submit */}
+        {/* Submit Button */}
         <button type="submit" disabled={loading}>
           {loading ? "Creating Account..." : "Create Account"}
         </button>
 
+        {/* Login Link */}
         <p className="register-footer">
           Already have an account?{" "}
           <Link to="/">Login</Link>
