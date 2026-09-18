@@ -4,32 +4,24 @@ const nodemailer = require("nodemailer");
 
 const db = require("../config/db");
 
-
 // =====================================================
 // EMAIL CONFIGURATION
 // =====================================================
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
+    port: 465,
+    secure: true,
 
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
     },
 
-    requireTLS: true,
-
-    tls: {
-        rejectUnauthorized: false,
-    },
-
-    connectionTimeout: 15000,
-    greetingTimeout: 15000,
-    socketTimeout: 15000,
+    connectionTimeout: 20000,
+    greetingTimeout: 20000,
+    socketTimeout: 20000,
 });
-
 
 // =====================================================
 // GENERATE VERIFICATION CODE
@@ -40,7 +32,6 @@ const generateVerificationCode = () => {
         100000 + Math.random() * 900000
     ).toString();
 };
-
 
 // =====================================================
 // REGISTER
@@ -55,7 +46,6 @@ const register = async (req, res) => {
         password,
         role
     } = req.body;
-
 
     // ---------------------------------------------
     // Validate fields
@@ -73,19 +63,15 @@ const register = async (req, res) => {
         });
     }
 
-
     // ---------------------------------------------
     // Validate password
     // ---------------------------------------------
 
     if (password.length < 6) {
-
         return res.status(400).json({
             message: "Password must be at least 6 characters."
         });
-
     }
-
 
     // ---------------------------------------------
     // Validate role
@@ -98,13 +84,10 @@ const register = async (req, res) => {
     ];
 
     if (!allowedRoles.includes(role)) {
-
         return res.status(400).json({
             message: "Invalid role selected."
         });
-
     }
-
 
     try {
 
@@ -119,7 +102,6 @@ const register = async (req, res) => {
             FROM users
             WHERE email = ?
         `;
-
 
         db.query(
             checkSql,
@@ -136,9 +118,7 @@ const register = async (req, res) => {
                     return res.status(500).json({
                         message: "Database error."
                     });
-
                 }
-
 
                 // ---------------------------------
                 // Existing account
@@ -161,11 +141,8 @@ const register = async (req, res) => {
                             message:
                                 "This email is already registered but not verified. Please verify your email."
                         });
-
                     }
-
                 }
-
 
                 // ---------------------------------
                 // Generate verification details
@@ -180,7 +157,6 @@ const register = async (req, res) => {
                         10 * 60 * 1000
                     );
 
-
                 // ---------------------------------
                 // Hash password
                 // ---------------------------------
@@ -190,7 +166,6 @@ const register = async (req, res) => {
                         password,
                         10
                     );
-
 
                 // ---------------------------------
                 // Insert user
@@ -211,7 +186,6 @@ const register = async (req, res) => {
                     )
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 `;
-
 
                 db.query(
                     insertSql,
@@ -243,9 +217,7 @@ const register = async (req, res) => {
                                 message:
                                     "Failed to create account."
                             });
-
                         }
-
 
                         // ---------------------------------
                         // Send verification email
@@ -374,7 +346,6 @@ const register = async (req, res) => {
                                 `
                             });
 
-
                             return res.status(201).json({
 
                                 success: true,
@@ -390,7 +361,6 @@ const register = async (req, res) => {
                                 "Email sending error:",
                                 emailError
                             );
-
 
                             // ---------------------------------
                             // Remove account if email fails
@@ -410,10 +380,8 @@ const register = async (req, res) => {
                                         );
 
                                     }
-
                                 }
                             );
-
 
                             return res.status(500).json({
 
@@ -423,12 +391,9 @@ const register = async (req, res) => {
                                     "Account could not be created because the verification email could not be sent."
 
                             });
-
                         }
-
                     }
                 );
-
             }
         );
 
@@ -442,10 +407,8 @@ const register = async (req, res) => {
         return res.status(500).json({
             message: "Server error."
         });
-
     }
 };
-
 
 // =====================================================
 // VERIFY EMAIL
@@ -458,7 +421,6 @@ const verifyEmail = (req, res) => {
         verificationCode
     } = req.body;
 
-
     if (
         !email ||
         !verificationCode
@@ -468,9 +430,7 @@ const verifyEmail = (req, res) => {
             message:
                 "Email and verification code are required."
         });
-
     }
-
 
     const sql = `
         SELECT
@@ -481,7 +441,6 @@ const verifyEmail = (req, res) => {
         FROM users
         WHERE email = ?
     `;
-
 
     db.query(
         sql,
@@ -498,9 +457,7 @@ const verifyEmail = (req, res) => {
                 return res.status(500).json({
                     message: "Database error."
                 });
-
             }
-
 
             if (results.length === 0) {
 
@@ -508,12 +465,9 @@ const verifyEmail = (req, res) => {
                     message:
                         "Account not found."
                 });
-
             }
 
-
             const user = results[0];
-
 
             if (
                 user.is_verified === 1
@@ -523,9 +477,7 @@ const verifyEmail = (req, res) => {
                     message:
                         "This email is already verified."
                 });
-
             }
-
 
             if (
                 user.verification_code !==
@@ -536,9 +488,7 @@ const verifyEmail = (req, res) => {
                     message:
                         "Invalid verification code."
                 });
-
             }
-
 
             if (
                 !user.verification_expires ||
@@ -553,9 +503,7 @@ const verifyEmail = (req, res) => {
                         "Verification code has expired. Please request a new code."
 
                 });
-
             }
-
 
             const updateSql = `
                 UPDATE users
@@ -565,7 +513,6 @@ const verifyEmail = (req, res) => {
                     verification_expires = NULL
                 WHERE id = ?
             `;
-
 
             db.query(
                 updateSql,
@@ -585,9 +532,7 @@ const verifyEmail = (req, res) => {
                                 "Failed to verify account."
 
                         });
-
                     }
-
 
                     return res.status(200).json({
 
@@ -597,14 +542,11 @@ const verifyEmail = (req, res) => {
                             "Email verified successfully. You can now login."
 
                     });
-
                 }
             );
-
         }
     );
 };
-
 
 // =====================================================
 // LOGIN
@@ -617,7 +559,6 @@ const login = (req, res) => {
         password
     } = req.body;
 
-
     if (
         !email ||
         !password
@@ -629,16 +570,13 @@ const login = (req, res) => {
                 "Email and password are required."
 
         });
-
     }
-
 
     const sql = `
         SELECT *
         FROM users
         WHERE email = ?
     `;
-
 
     db.query(
         sql,
@@ -655,9 +593,7 @@ const login = (req, res) => {
                 return res.status(500).json({
                     message: "Database error."
                 });
-
             }
-
 
             if (results.length === 0) {
 
@@ -667,12 +603,9 @@ const login = (req, res) => {
                         "Invalid email or password."
 
                 });
-
             }
 
-
             const user = results[0];
-
 
             // ---------------------------------
             // Check verification
@@ -688,9 +621,7 @@ const login = (req, res) => {
                         "Please verify your email before logging in."
 
                 });
-
             }
-
 
             // ---------------------------------
             // Check password
@@ -702,7 +633,6 @@ const login = (req, res) => {
                     user.password
                 );
 
-
             if (!passwordMatch) {
 
                 return res.status(401).json({
@@ -711,9 +641,7 @@ const login = (req, res) => {
                         "Invalid email or password."
 
                 });
-
             }
-
 
             // ---------------------------------
             // Generate JWT
@@ -733,9 +661,7 @@ const login = (req, res) => {
                     {
                         expiresIn: "1d"
                     }
-
                 );
-
 
             // ---------------------------------
             // Login response
@@ -767,22 +693,17 @@ const login = (req, res) => {
                         user.role
 
                 }
-
             });
-
         }
     );
 };
-
 
 // =====================================================
 // EXPORT
 // =====================================================
 
 module.exports = {
-
     register,
     verifyEmail,
     login
-
 };
