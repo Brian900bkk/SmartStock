@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://smartstock-api-8mqb.onrender.com/api",
 });
 
 // Add JWT token to every request
