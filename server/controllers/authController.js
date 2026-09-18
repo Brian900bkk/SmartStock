@@ -1,27 +1,14 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
 const db = require("../config/db");
 
 // =====================================================
-// EMAIL CONFIGURATION
+// RESEND EMAIL CONFIGURATION
 // =====================================================
 
-const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
-
-    connectionTimeout: 20000,
-    greetingTimeout: 20000,
-    socketTimeout: 20000,
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // =====================================================
 // GENERATE VERIFICATION CODE
@@ -220,131 +207,176 @@ const register = async (req, res) => {
                         }
 
                         // ---------------------------------
-                        // Send verification email
+                        // Send verification email using Resend
                         // ---------------------------------
 
                         try {
 
-                            await transporter.sendMail({
+                            const { data, error } =
+                                await resend.emails.send({
 
-                                from:
-                                    `"SmartStock" <${process.env.EMAIL_USER}>`,
+                                    from:
+                                        "SmartStock <onboarding@resend.dev>",
 
-                                to: email,
+                                    to: [email],
 
-                                subject:
-                                    "SmartStock Email Verification",
+                                    subject:
+                                        "SmartStock Email Verification",
 
-                                html: `
-                                    <div style="
-                                        font-family: Arial, sans-serif;
-                                        max-width: 600px;
-                                        margin: auto;
-                                        padding: 30px;
-                                        background: #f5f7fb;
-                                    ">
-
+                                    html: `
                                         <div style="
-                                            background: white;
-                                            padding: 35px;
-                                            border-radius: 12px;
-                                            text-align: center;
-                                            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+                                            font-family: Arial, sans-serif;
+                                            max-width: 600px;
+                                            margin: auto;
+                                            padding: 30px;
+                                            background: #f5f7fb;
                                         ">
 
-                                            <h1 style="
-                                                color: #2563eb;
-                                                margin-bottom: 10px;
-                                            ">
-                                                SmartStock
-                                            </h1>
-
-                                            <h2>
-                                                Verify Your Email
-                                            </h2>
-
-                                            <p style="
-                                                color: #555;
-                                                font-size: 16px;
-                                            ">
-                                                Hello ${full_name},
-                                            </p>
-
-                                            <p style="
-                                                color: #555;
-                                                font-size: 15px;
-                                            ">
-                                                Thank you for creating your
-                                                SmartStock account.
-                                            </p>
-
-                                            <p style="
-                                                color: #555;
-                                                font-size: 15px;
-                                            ">
-                                                Your selected account role is:
-                                            </p>
-
-                                            <p style="
-                                                color: #2563eb;
-                                                font-size: 18px;
-                                                font-weight: bold;
-                                                text-transform: capitalize;
-                                            ">
-                                                ${role}
-                                            </p>
-
-                                            <p style="
-                                                color: #555;
-                                                font-size: 15px;
-                                            ">
-                                                Use the verification code below
-                                                to verify your email.
-                                            </p>
-
                                             <div style="
-                                                margin: 30px 0;
-                                                padding: 20px;
-                                                background: #eff6ff;
-                                                border-radius: 10px;
+                                                background: white;
+                                                padding: 35px;
+                                                border-radius: 12px;
+                                                text-align: center;
+                                                box-shadow: 0 5px 20px rgba(0,0,0,0.08);
                                             ">
+
+                                                <h1 style="
+                                                    color: #2563eb;
+                                                    margin-bottom: 10px;
+                                                ">
+                                                    SmartStock
+                                                </h1>
+
+                                                <h2>
+                                                    Verify Your Email
+                                                </h2>
+
+                                                <p style="
+                                                    color: #555;
+                                                    font-size: 16px;
+                                                ">
+                                                    Hello ${full_name},
+                                                </p>
+
+                                                <p style="
+                                                    color: #555;
+                                                    font-size: 15px;
+                                                ">
+                                                    Thank you for creating your
+                                                    SmartStock account.
+                                                </p>
+
+                                                <p style="
+                                                    color: #555;
+                                                    font-size: 15px;
+                                                ">
+                                                    Your selected account role is:
+                                                </p>
+
+                                                <p style="
+                                                    color: #2563eb;
+                                                    font-size: 18px;
+                                                    font-weight: bold;
+                                                    text-transform: capitalize;
+                                                ">
+                                                    ${role}
+                                                </p>
+
+                                                <p style="
+                                                    color: #555;
+                                                    font-size: 15px;
+                                                ">
+                                                    Use the verification code below
+                                                    to verify your email.
+                                                </p>
 
                                                 <div style="
-                                                    font-size: 36px;
-                                                    font-weight: bold;
-                                                    letter-spacing: 8px;
-                                                    color: #2563eb;
+                                                    margin: 30px 0;
+                                                    padding: 20px;
+                                                    background: #eff6ff;
+                                                    border-radius: 10px;
                                                 ">
-                                                    ${verificationCode}
+
+                                                    <div style="
+                                                        font-size: 36px;
+                                                        font-weight: bold;
+                                                        letter-spacing: 8px;
+                                                        color: #2563eb;
+                                                    ">
+                                                        ${verificationCode}
+                                                    </div>
+
                                                 </div>
+
+                                                <p style="
+                                                    color: #777;
+                                                    font-size: 14px;
+                                                ">
+                                                    This code expires in
+                                                    <strong>
+                                                        10 minutes
+                                                    </strong>.
+                                                </p>
+
+                                                <p style="
+                                                    color: #999;
+                                                    font-size: 12px;
+                                                    margin-top: 30px;
+                                                ">
+                                                    If you did not create a
+                                                    SmartStock account, you can
+                                                    safely ignore this email.
+                                                </p>
 
                                             </div>
 
-                                            <p style="
-                                                color: #777;
-                                                font-size: 14px;
-                                            ">
-                                                This code expires in
-                                                <strong>
-                                                    10 minutes
-                                                </strong>.
-                                            </p>
-
-                                            <p style="
-                                                color: #999;
-                                                font-size: 12px;
-                                                margin-top: 30px;
-                                            ">
-                                                If you did not create a
-                                                SmartStock account, you can
-                                                safely ignore this email.
-                                            </p>
-
                                         </div>
+                                    `
+                                });
 
-                                    </div>
-                                `
-                            });
+                            // ---------------------------------
+                            // Check Resend response
+                            // ---------------------------------
+
+                            if (error) {
+
+                                console.error(
+                                    "Resend email error:",
+                                    error
+                                );
+
+                                // Remove account if email fails
+                                db.query(
+                                    "DELETE FROM users WHERE id = ?",
+                                    [result.insertId],
+                                    (deleteErr) => {
+
+                                        if (deleteErr) {
+
+                                            console.error(
+                                                "Failed to remove user after email error:",
+                                                deleteErr
+                                            );
+
+                                        }
+
+                                    }
+                                );
+
+                                return res.status(500).json({
+
+                                    success: false,
+
+                                    message:
+                                        "Account could not be created because the verification email could not be sent."
+
+                                });
+                            }
+
+                            console.log(
+                                "Verification email sent successfully:",
+                                data
+                            );
 
                             return res.status(201).json({
 
@@ -380,6 +412,7 @@ const register = async (req, res) => {
                                         );
 
                                     }
+
                                 }
                             );
 
