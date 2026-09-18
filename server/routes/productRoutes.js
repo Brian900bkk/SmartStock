@@ -6,7 +6,7 @@ const {
   addProduct,
   updateProduct,
   deleteProduct,
-} = require("../controllers/ProductController");
+} = require("../controllers/productController")
 
 const verifyToken = require("../middleware/authMiddleware");
 const adminOnly = require("../middleware/adminMiddleware");
